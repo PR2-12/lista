@@ -1,4 +1,3 @@
-
 class Nodo {
 	Nodo referencia;
 	int valor;
@@ -13,7 +12,6 @@ class Nodo {
 
 	public Nodo(int valor) {
 		this.valor = valor;
-
 	}
 }
 
@@ -40,12 +38,14 @@ public class ContenedorDeEnteros {
 
 	private boolean insertarNodo(int elemento) {
 		Nodo temporal = nodo.referencia;
-		nodo.referencia = new Nodo(elemento).referencia = temporal;
+		nodo.referencia = new Nodo(elemento, temporal);
+		cantidadElemento++;
 		return true;
 	}
 
 	private boolean insertarPrimerNodo(int elemento) {
 		nodo.referencia = new Nodo(elemento);
+		cantidadElemento++;
 		return true;
 	}
 
@@ -53,33 +53,39 @@ public class ContenedorDeEnteros {
 		iterador = nodo;
 		while (iterador.referencia != null) {
 			if (iterador.referencia.valor == elemento)
-				extraerElemento();
+				return extraerElemento();
+			iterador = iterador.referencia;
 		}
+
 		return false;
 	}
 
 	private boolean extraerElemento() {
 		iterador.referencia = iterador.referencia.referencia;
+		cantidadElemento--;
 		return true;
 	}
 
 	public boolean buscar(int elemento) {
 		iterador = nodo;
-		while (iterador != null) {
+		while (iterador.referencia != null) {
 			if (iterador.referencia.valor == elemento)
 				return true;
+			iterador = iterador.referencia;
 		}
 		return false;
 	}
-	public void vaciar(){
-		nodo.referencia=null;
+
+	public void vaciar() {
+		nodo.referencia = null;
 	}
-	public int [] elementos(){
+
+	public int[] elementos() {
 		iterador = nodo.referencia;
-		int [] arreglo=new int [cantidadElemento]; 
+		int[] arreglo = new int[cantidadElemento];
 		for (int i = 0; i < cantidadElemento; i++) {
-			arreglo[i]=iterador.valor;
-			iterador=iterador.referencia;
+			arreglo[i] = iterador.valor;
+			iterador = iterador.referencia;
 		}
 		return arreglo;
 	}
