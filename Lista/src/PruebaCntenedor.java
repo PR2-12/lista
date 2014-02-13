@@ -13,34 +13,43 @@ public class PruebaCntenedor {
 
 	public static void main(String[] args) throws IOException {
 		cargarVector();
-		long []tiempo=probarInsertar();
+		long[] tiempo = probarInsertar();
 		for (int i = 0; i < tiempo.length; i++) {
-			System.out.println("el tiempo es:"+tiempo[i]);
+			System.out.println("el tiempo es:" + tiempo[i]);
 		}
 
 	}
 
 	private static long[] probarInsertar() {
-		Date actual = new Date();
-		calendario.setTime(actual);
-		int contadorFecha = 0;
-		long[] tiempos = new long[10];
+		Date actual ;
+		long[] tiemposPorIncersion = new long[100000];
 		for (int i = 0; i < elementos.length; i++) {
+			actual=new Date();
 			lista.insertar(elementos[i]);
-			if ((i+1)%10000==0 && i!=0) {
-				guardarTiempo(actual, contadorFecha, tiempos);
-				actual=new Date();
-				contadorFecha++;
+			actual=new Date();
+			guardarTiempoPorIncersion(actual,i ,tiemposPorIncersion);
+		}
+	return	calcularPromedio(tiemposPorIncersion);
+	}
+
+	private static long[] calcularPromedio(long[] tiemposPorIncersion) {
+		long[] tiempos = new long[10];
+		long contador = 0;
+		for (int j = 0; j < tiemposPorIncersion.length; j++) {
+			contador += tiemposPorIncersion[j];
+			if ((j + 1) % 10000 == 0) {
+				tiempos[((j + 1) / 10000) - 1] = contador / j + 1;
 			}
 		}
 		return tiempos;
 	}
 
-	private static void guardarTiempo(Date fecha, int contadorFecha,long[] tiempos) {
-		calendario.setTime(fecha);
-		tiempos[contadorFecha] = calendario.getTimeInMillis();
-		
+	private static void guardarTiempoPorIncersion(Date actual, int i,long[] tiempos) {
+		calendario.setTime(actual);
+		tiempos[i] = calendario.getTimeInMillis();
 	}
+
+	
 
 	private static void cargarVector() throws IOException {
 		RandomAccessFile randomReader = new RandomAccessFile(new File(path),"rw");
