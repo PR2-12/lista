@@ -1,37 +1,52 @@
-public class PruebaCntenedor {
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
+import java.io.File;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
-	ContenedorDeEnteros a = new ContenedorDeEnteros();
-//		a.insertar(4);
-//		a.insertar(5);
-//		a.insertar(6);
-//		a.insertar(7);
-//		if(a.buscar(5))
-//			System.out.println("el elemento 5 está");
-//		a.extraer(5);
-//		if (!a.buscar(5)) {
-//			System.out.println("El elemento nos está");
-//		}
-//		System.out.println("la cantidad total es :"+a.cardinal());
-//		int [] e=a.elementos();
-//		 for (int i = 0; i < e.length; i++) {
-//			System.out.println("elemento"+e[i]);
-//		} 
-//		
+public class PruebaCntenedor {
+	static int[] elementos = new int[100000];
+	static String path = "C:\\Users\\osvaldo\\git\\GitRepository\\Lista\\src\\datos.dat";
+	static ContenedorDeEnteros lista = new ContenedorDeEnteros();
+	static Calendar calendario = new GregorianCalendar();
+
+	public static void main(String[] args) throws IOException {
+		cargarVector();
+		long []tiempo=probarInsertar();
+		for (int i = 0; i < tiempo.length; i++) {
+			System.out.println("el tiempo es:"+tiempo[i]);
+		}
+
+	}
+
+	private static long[] probarInsertar() {
+		Date actual = new Date();
+		calendario.setTime(actual);
+		int contadorFecha = 0;
+		long[] tiempos = new long[10];
+		for (int i = 0; i < elementos.length; i++) {
+			lista.insertar(elementos[i]);
+			if ((i+1)%10000==0 && i!=0) {
+				guardarTiempo(actual, contadorFecha, tiempos);
+				actual=new Date();
+				contadorFecha++;
+			}
+		}
+		return tiempos;
+	}
+
+	private static void guardarTiempo(Date fecha, int contadorFecha,long[] tiempos) {
+		calendario.setTime(fecha);
+		tiempos[contadorFecha] = calendario.getTimeInMillis();
 		
-		 int[] v;
-		 System.out.println("El contenedor a tiene "+a.cardinal()+" elementos.");
-		 for(int i=0; i<10; i++){
-		 a.insertar(i);
-		 a.buscar(i);
-		 }
-		 v = a.elementos();
-		 for(int i=0; i<a.cardinal(); i++) System.out.println(v[i]);
-		 a.vaciar();
-		 for(int i=0; i<100; i++){
-		 a.insertar(i);
-		 a.extraer(i);
-		 }
+	}
+
+	private static void cargarVector() throws IOException {
+		RandomAccessFile randomReader = new RandomAccessFile(new File(path),"rw");
+		for (int i = 0; i < elementos.length; i++) {
+			elementos[i] = randomReader.read();
+		}
+		randomReader.close();
 	}
 }
